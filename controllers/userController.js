@@ -43,4 +43,28 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  async addFriend(req, res) {
+    try {
+      const dbUserData = await User.findByIdAndUpdate(
+        req.params.id,
+        { $push: { friends: req.params.friendId } },
+        { new: true }
+      );
+      res.json(dbUserData);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  async removeFriend(req, res) {
+    try {
+        const dbUserData = await User.findByIdAndUpdate(
+            req.params.id,
+            { $pull: { friends: req.params.friendId } },
+            { new: true }
+          );
+          res.json(dbUserData);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
 };
