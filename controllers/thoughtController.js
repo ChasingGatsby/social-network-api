@@ -64,7 +64,7 @@ module.exports = {
     try {
       const dbReactionData = await Thought.findByIdAndUpdate(
         req.params.id,
-        { $pull: { reactions: req.params.reactionId } },
+        { $pull: { reactions: { _id: req.params.reactionId } } },
         { new: true }
       );
       res.json(dbReactionData);
