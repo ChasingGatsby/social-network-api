@@ -1,9 +1,9 @@
-const Thought = require("../models/Thought");
+const { User, Thought } = require("../models");
 
 module.exports = {
   async getThoughts(req, res) {
     try {
-      const thoughts = await Thought.find;
+      const thoughts = await Thought.find();
       res.json(thoughts);
     } catch (err) {
       res.status(500).json(err);
@@ -20,9 +20,11 @@ module.exports = {
   async createThought(req, res) {
     try {
       const dbThoughtData = await Thought.create(req.body);
-      const user = await User.findById(req.body.userId);
-      user.thoughts.push(dbThoughtData._id);
-      await user.save();
+      await User.findOneAndUpdate(
+        { username: req.body.username },
+        { $push: { thoughts: dbThoughtData._id } },
+        { new: true }
+      );
       res.json(dbThoughtData);
     } catch (err) {
       res.status(500).json(err);
@@ -57,6 +59,7 @@ module.exports = {
       );
       res.json(dbReactionData);
     } catch (err) {
+      console.log()
       res.status(500).json(err);
     }
   },
